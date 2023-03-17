@@ -1,24 +1,11 @@
-import time
-import automationhat
+from pymavlink import mavutil
 
-# Initialize the Automation HAT
-automationhat.enable_auto_lights(True)
-automationhat.light.power.write(1)
+# Connect to the APM 2.8 via USB
+connection_string = "/dev/ttyACM0"  # This is the correct serial device on your Raspberry Pi
+baudrate = 115200  # Change this to the correct baud rate for your APM 2.8
 
-# Turn on Relay 1 for 5 seconds, then turn it off
-automationhat.relay.one.write(1)
-time.sleep(5)
-automationhat.relay.one.write(0)
-
-# Turn on Relay 2 for 5 seconds, then turn it off
-automationhat.relay.two.write(1)
-time.sleep(5)
-automationhat.relay.two.write(0)
-
-# Turn on Relay 3 for 5 seconds, then turn it off
-automationhat.relay.three.write(1)
-time.sleep(5)
-automationhat.relay.three.write(0)
-
-# Clean up and turn off the power light
-automationhat.light.power.write(0)
+# Create a connection to the APM 2.8
+mav = mavutil.mavlink_connection(connection_string, baud=baudrate)
+# Wait for a heartbeat message from the APM 2.8 to ensure the connection is established
+mav.wait_heartbeat()
+print("Connected to APM 2.8")
