@@ -13,14 +13,16 @@ print("Heartbeat received from APM 2.8")
 # Request GPS data
 def request_gps_data():
     mav.mav.request_data_stream_send(
-        mav.target_system, mav.target_component,
-        mavutil.mavlink.MAV_DATA_STREAM_POSITION, 1, 1)
+    mav.target_system, mav.target_component,
+    mavutil.mavlink.MAV_DATA_STREAM_POSITION, 5, 1)
+
 
 # Main loop
 while True:
     request_gps_data()
-
-    msg = mav.recv_match(type='GLOBAL_POSITION_INT', blocking=True)
+    print("im here")
+    msg = mav.recv_match(type='GLOBAL_POSITION_INT', blocking=False, timeout=5)
+    print(msg)
     if msg:
         lat = msg.lat / 1e7
         lon = msg.lon / 1e7
@@ -31,4 +33,4 @@ while True:
         print("Longitude:", lon)
         print("Altitude (meters):", alt)
 
-    time.sleep(1)
+    time.sleep(0.2)
